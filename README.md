@@ -21,9 +21,68 @@
   <a href="#credits"><strong>Credits</strong></a>
 </p>
 
+---
+This is a fork of https://github.com/togethercomputer/MoA
+
+All credit to the original authors!
+
+It implements to following additional features:
+- [Support for custom OpenAI endpoints (Ollama, OpenRouter, Groq)](https://github.com/tijszwinkels/MoA?tab=readme-ov-file#other-openai-compatible-api-endpoints)
+- [Run MoA on a OpenAI-compatible endpoint, to connect all your apps to it](https://github.com/tijszwinkels/MoA?tab=readme-ov-file#openai-compatible-api-endpoint)
+
+## Quick examples
+
+### Start OpenAI compatible API using Groq
+```
+pip install -r requirements.txt
+export OPENAI_BASE_URL="https://api.groq.com/openai/v1"
+# Get your key at https://console.groq.com/keys
+export OPENAI_API_KEY="<your-groq-key>" 
+
+DEBUG=1 python bot.py --model "groq/mixtral-8x7b-32768" --reference-models "groq/llama3-70b-8192" --reference-models "groq/mixtral-8x7b-32768" --reference-models "groq/gemma2-9b-it" --max-tokens 3072 --port 5001
+```
+
+or
+
+### Start OpenAI compatible API using GPT-4o and Claude Sonnet 3.5 on OpenRouter
+```
+pip install -r requirements.txt
+export OPENAI_BASE_URL="https://openrouter.ai/api/v1"
+# Get your key at https://openrouter.ai/settings/keys
+export OPENAI_API_KEY="<your-openrouter-key>"
+
+DEBUG=1 python api.py --model "anthropic/claude-3.5-sonnet:beta" --reference-models "openai/gpt-4o" --reference-models "anthropic/claude-3.5-sonnet:beta" --max-tokens 3072 --port 5001
+``` 
+
+### Query the API
+
+```
+curl http://localhost:5001/v1/chat/completions   -H "Content-Type: application/json" -d '{
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a poetic assistant, skilled in explaining complex programming concepts with creative flair."
+      },
+      {
+        "role": "user",
+        "content": "Compose a poem that explains the concept of recursion in programming."
+      }
+    ]
+  }'
+```
+
+Or, attach any of your local clients to it!
+
+### Known limitations
+- Is compatible with streaming, but doesn't really stream; Returns the whole response at once.
+- `--rounds > 1` doesn't currently work. (doesn't work in the original bot either)
+
+---
+
 ## Overview
 
 Mixture of Agents (MoA) is a novel approach that leverages the collective strengths of multiple LLMs to enhance performance, achieving state-of-the-art results. By employing a layered architecture where each layer comprises several LLM agents, **MoA significantly outperforms GPT-4 Omni’s 57.5% on AlpacaEval 2.0 with a score of 65.1%**, using only open-source models!
+
 
 ## Quickstart: MoA in 50 LOC
 
